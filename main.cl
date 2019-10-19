@@ -48,6 +48,24 @@ class Main inherits IO{
                     fi
                 fi;
 
+                if str = "String" then
+                    ret <- ""
+                else
+                    if str = "Int" then
+                        ret <- 1
+                    else
+                        if str = "Bool" then
+                            ret <- true
+                        else
+                            if str = "IO" then
+                                ret <- new IO
+                            else
+                                1
+                            fi
+                        fi
+                    fi
+                fi;
+
                 ret;
             }
     };
@@ -73,7 +91,6 @@ class Main inherits IO{
             {
                 while loops loop {
                     current_line <- in_string();
-                    out_string("OBJ: ".concat(current_line).concat("\n"));
                     if (current_line = "END") then
                         loops <- false
                     else
@@ -109,6 +126,7 @@ class Main inherits IO{
                                             current_prod <- x.init(n, m, p);
                                             current_list <- current_list.add(current_prod);
                                         };
+
                                 x: Rank =>
                                      let n: String,
                                          current_rank: Rank
@@ -121,6 +139,46 @@ class Main inherits IO{
                                             current_rank <- x.init(n);
                                             current_list <- current_list.add(current_rank);
                                         };
+
+                                x: String =>
+                                    let n: String
+                                    in
+                                        {
+                                            case tokenizer.getTokens().getIndex(1) of
+                                                x: String => n <- x;
+                                            esac;
+
+                                            current_list <- current_list.add(n);
+                                        };
+
+                                x: Int =>
+                                    let n: String
+                                    in
+                                        {
+                                            case tokenizer.getTokens().getIndex(1) of
+                                                x: String => n <- x;
+                                            esac;
+
+                                            current_list <- current_list.add(converter.a2i(n));
+                                        };
+
+                                x: Bool =>
+                                    let n: String
+                                    in
+                                        {
+                                            case tokenizer.getTokens().getIndex(1) of
+                                                x: String => n <- x;
+                                            esac;
+
+                                            if n = "true" then
+                                                current_list <- current_list.add(true)
+                                            else
+                                                current_list <- current_list.add(false)
+                                            fi;
+                                        };
+
+                                x: IO => current_list <- current_list.add(x);
+
                             esac;
                         }
                     fi;
@@ -282,7 +340,27 @@ class Main inherits IO{
             help()
         else
             if cmd = "print" then
-                print()
+                let i1: Int
+                in
+                    if tokenizer.getTokens().tl().isEmpty() then
+                        print()
+                    else
+                        {
+                            case tokenizer.getTokens().getIndex(1) of
+                                x: String => i1 <- converter.a2i(x);
+                            esac;
+
+                            if (lists.getSize() < i1) then {
+                                abort();
+                                (0 - 1);
+                            } else {
+                                case lists.getIndex(i1 -1) of
+                                    x: List => out_string(x.toString().concat("\n"));
+                                esac;
+                            } fi;
+
+                        }
+                    fi
             else
                 if cmd = "load" then
                     load()
@@ -369,9 +447,7 @@ class Main inherits IO{
 	        in
 	            {
                     load();
-                    out_string("Loading over\n\n");
                     while looping loop {
-                        out_string("CMD: ".concat(somestr));
                         somestr <- in_string();
                         if (somestr = "END") then
                             looping <- false

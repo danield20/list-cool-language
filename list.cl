@@ -27,8 +27,8 @@ class List inherits IO {
         new Cons.init(o, self)
     };
 
-    contains(o: Object): Bool {
-        false
+    contains(o: Object): Int {
+        (0 - 1)
     };
 
     filterBy(f: Filter): List {
@@ -40,6 +40,10 @@ class List inherits IO {
             abort();
             "ret";
         }
+    };
+
+    getSize(): Int {
+        0
     };
 
     merge(other: List): List {
@@ -59,7 +63,7 @@ class List inherits IO {
         self
     };
 
-    toString(): String { "[]" };
+    toString(): String { "[  ]" };
 };
 
 class Cons inherits List {
@@ -109,19 +113,22 @@ class Cons inherits List {
         fi
     };
 
-    contains(o: Object): Bool {
+    contains(o: Object): Int {
         let aux: List <- self,
-            ret: Bool <- false
+            ret: Int <- 0 - 1,
+            idx: Int <- 0
+
 		in
             {
                 while (not aux.isEmpty()) loop
                     {
                         if aux.hd() = o then
-                            ret <- true
+                            ret <- idx
                         else
                             1
                         fi;
                         aux <- aux.tl();
+                        idx <- idx + 1;
                     }
                 pool;
                 ret;
@@ -173,6 +180,22 @@ class Cons inherits List {
                 pool;
 
                 ret;
+            }
+    };
+
+    getSize(): Int {
+        let current_idx: Int <- 0,
+            aux: List <- self
+		in
+            {
+                while (not aux.isEmpty()) loop
+                    {
+                        aux <- aux.tl();
+                        current_idx <- current_idx + 1;
+                    }
+                pool;
+
+                current_idx;
             }
     };
 

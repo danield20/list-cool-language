@@ -8,7 +8,7 @@ class PriceComparator inherits Comparator {
         {
             case o1 of x: Product =>
                 case o2 of y: Product =>
-                    x.getprice() - y.getprice();
+                        x.getprice() - y.getprice();
                 esac;
             esac;
         }
@@ -122,7 +122,7 @@ class LesserFilter inherits Filter {
     }};
 
     filter(o1: Object): Bool {
-        if c.compareTo(o, o1) = 1 then
+        if 1 <= c.compareTo(o, o1) then
             true
         else
             if c.compareTo(o, o1) = 0 then
@@ -145,7 +145,7 @@ class BiggerFilter inherits Filter {
     }};
 
     filter(o1: Object): Bool {
-        if c.compareTo(o, o1) = 1 then
+        if 1 <= c.compareTo(o, o1) then
             false
         else
             if c.compareTo(o, o1) = 0 then
